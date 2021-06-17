@@ -4,7 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:orientation="vertical">
+
+<!--    <ListView-->
+<!--        android:id="@+id/lv"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        tools:listitem="@layout/content_layout"/>-->
 
     <ListView
         android:id="@+id/lv1"
@@ -15,105 +22,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <Button
-            android:layout_width="330dp"
-            android:layout_height="55dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="75dp"
-            android:text="test" />
-
-        <Button
-            android:layout_width="330dp"
-            android:layout_height="55dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="75dp"
-            android:text="test" />
-
-        <Button
-            android:layout_width="330dp"
-            android:layout_height="55dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="75dp"
-            android:text="test" />
-
-        <Button
-            android:layout_width="330dp"
-            android:layout_height="55dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="75dp"
-            android:text="test" />
-
-        <Button
-            android:layout_width="330dp"
-            android:layout_height="55dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="75dp"
-            android:text="test" />
-
-        <Button
-            android:layout_width="330dp"
-            android:layout_height="55dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="75dp"
-            android:text="test" />
-
-        <Button
-            android:layout_width="330dp"
-            android:layout_height="55dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="75dp"
-            android:text="test" />
-
-        <Button
-            android:layout_width="330dp"
-            android:layout_height="55dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="75dp"
-            android:text="test" />
-
-        <Button
-            android:layout_width="330dp"
-            android:layout_height="55dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="75dp"
-            android:text="test" />
-
-        <Button
-            android:layout_width="330dp"
-            android:layout_height="55dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="75dp"
-            android:text="test" />
-
-        <Button
-            android:layout_width="330dp"
-            android:layout_height="55dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="75dp"
-            android:text="test" />
-
-        <Button
-            android:layout_width="330dp"
-            android:layout_height="55dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="75dp"
-            android:text="test" />
-
-        <Button
-            android:layout_width="330dp"
-            android:layout_height="55dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="75dp"
-            android:text="test" />
-
-        <Button
-            android:layout_width="330dp"
-            android:layout_height="55dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="75dp"
-            android:text="test" />
-
     </LinearLayout>
 
 </LinearLayout>
