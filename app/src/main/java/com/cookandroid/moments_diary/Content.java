@@ -4,12 +4,12 @@ import java.text.SimpleDateFormat;
 
 public class Content {
 //    private SimpleDateFormat
-    private String title, reply, targetDate;
+    private String title, reply, day;
 
     public Content(String title, String reply, String targetDate) {
         this.title = title;
         this.reply = reply;
-        this.targetDate = targetDate;
+        this.day = targetDate;
     }
 
     public String getTitle() {
@@ -28,11 +28,11 @@ public class Content {
         this.reply = reply;
     }
 
-    public String getTargetDate() {
-        return targetDate;
+    public String getDay() {
+        return day;
     }
 
-    public void setTargetDate(String targetDate) {
-        this.targetDate = targetDate;
+    public void setDay(String targetDate) {
+        this.day = targetDate;
     }
 }

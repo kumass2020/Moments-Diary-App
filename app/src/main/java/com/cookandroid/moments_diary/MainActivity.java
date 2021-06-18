@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         // Adapter 생성
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayList);
 
-        listView = (ListView)findViewById(R.id.lv1);
+        listView = (ListView)findViewById(R.id.lv);
 
         // ListView에 Adapter 연결
         listView.setAdapter(arrayAdapter);
