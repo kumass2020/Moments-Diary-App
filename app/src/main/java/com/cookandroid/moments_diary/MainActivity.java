@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         // Adapter 생성
         adapter = new ListViewAdapter() ;
 
-        // 리스트뷰 참조 및 Adapter달기
+        // 리스트뷰 참조 및 Adapter 설정
         listview = (ListView) findViewById(R.id.lv);
         listview.setAdapter(adapter);
 
@@ -39,5 +39,16 @@ public class MainActivity extends AppCompatActivity {
         adapter.addItem("25", "Circle");
         // 세 번째 아이템 추가.
         adapter.addItem("25", "Ind");
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView parent, View v, int position, long id) {
+                // get item
+                Content item = (Content)parent.getItemAtPosition(position);
+
+                String dayStr = item.getDay();
+                String titleStr = item.getTitle();
+            }
+        });
     }
 }
