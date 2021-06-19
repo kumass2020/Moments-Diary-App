@@ -13,6 +13,7 @@ public class Content {
 //    }
 
     public String getTitle() {
+        title =
         return title;
     }
 

@@ -1,14 +1,17 @@
 package com.cookandroid.moments_diary;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -49,13 +52,35 @@ public class MainActivity extends AppCompatActivity {
         adapter.addItem("25", "Ind");
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
             public void onItemClick(AdapterView parent, View v, int position, long id) {
+
                 // get item
                 Content item = (Content)parent.getItemAtPosition(position);
+//                String dayStr = item.getDay();
+//                String titleStr = item.getTitle();
 
-                String dayStr = item.getDay();
-                String titleStr = item.getTitle();
+                // Content 클릭 시 팝업 메뉴
+                final PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
+                getMenuInflater().inflate(R.menu.popup_menu,popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if (menuItem.getItemId() == R.id.addDiary){
+                            Toast.makeText(MainActivity.this, "메뉴 1 클릭", Toast.LENGTH_SHORT).show();
+                        }else if (menuItem.getItemId() == R.id.scheduleModify){
+                            Toast.makeText(MainActivity.this, "메뉴 2 클릭", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(MainActivity.this, "메뉴 3 클릭", Toast.LENGTH_SHORT).show();
+                        }
+
+                        return false;
+                    }
+                });
+                popupMenu.show();
+
+
             }
         });
     }

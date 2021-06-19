@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/addDiary"
+        android:title="다이어리 작성" />
+    <item
+        android:id="@+id/scheduleModify"
+        android:title="스케줄 수정" />
+    <item
+        android:id="@+id/scheduleRemove"
+        android:title="스케줄 삭제" />
+
+</menu>
