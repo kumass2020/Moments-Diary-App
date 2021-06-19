@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -30,9 +31,12 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<String> arrayList;
     ArrayAdapter arrayAdapter;
-    ListView listView;
+//    ListView listView;
     BottomNavigationView bottomMenu;
     FragmentManager fragmentManager = getSupportFragmentManager();
+
+    ListView listview ;
+    ListViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +50,10 @@ public class MainActivity extends AppCompatActivity {
         db = helper.getWritableDatabase();
         helper.onCreate(db);
 
-        ListView listview ;
-        ListViewAdapter adapter;
-
         final LinearLayout llWrite = (LinearLayout)View.inflate(MainActivity.this, R.layout.write_dialog, null);
 
         // Adapter 생성
-        adapter = new ListViewAdapter() ;
+        adapter = new ListViewAdapter();
 
         // 리스트뷰 참조 및 Adapter 설정
         listview = (ListView) findViewById(R.id.lv);
@@ -108,18 +109,26 @@ public class MainActivity extends AppCompatActivity {
                 switch(item.getItemId())
                 {
                     case R.id.first_tab:
-                        new AlertDialog().Builder(MainActivity.this)
+                        if (llWrite.getParent() != null)
+                            ((ViewGroup)llWrite.getParent()).removeView(llWrite);
+                        new AlertDialog.Builder(MainActivity.this)
                                 .setView(llWrite)
                                 .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                    public void onClick(DialogInterface dialog, int i) {
                                         EditText etWrite = (EditText)llWrite.findViewById(R.id.etWrite);
                                         String value = etWrite.getText().toString();
                                         DBControl dbc = new DBControl(db);
                                         dbc.insertContent(value);
-                                        refreshFragment(db);
+                                        refreshFragment();
+                                        dialog.dismiss();
                                     }
                                 })
+                                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int i) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
                         break;
 
                     case R.id.second_tab:
@@ -139,7 +148,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 현재 fragment 새로고침. DB 내용이 화면에 반영되는 효과.
-    void refreshFragment(SQLiteDatabase db) {
-
+    void refreshFragment() {
+        adapter.notifyDataSetChanged();
+//        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+//        ft.detach(this).attach(this).commit();
     }
 }
