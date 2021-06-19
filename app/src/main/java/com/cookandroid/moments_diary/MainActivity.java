@@ -1,6 +1,9 @@
 package com.cookandroid.moments_diary;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -10,9 +13,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
@@ -21,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> arrayList;
     ArrayAdapter arrayAdapter;
     ListView listView;
+    BottomNavigationView bottomMenu;
+    FragmentManager fragmentManager = getSupportFragmentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
                 // get item
                 Content item = (Content)parent.getItemAtPosition(position);
-//                String dayStr = item.getDay();
-//                String titleStr = item.getTitle();
+                String strDay = item.getDay();
+                String strTitle = item.getTitle();
 
                 // Content 클릭 시 팝업 메뉴
                 final PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
@@ -68,11 +76,12 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         if (menuItem.getItemId() == R.id.addDiary){
-                            Toast.makeText(MainActivity.this, "메뉴 1 클릭", Toast.LENGTH_SHORT).show();
-                        }else if (menuItem.getItemId() == R.id.scheduleModify){
-                            Toast.makeText(MainActivity.this, "메뉴 2 클릭", Toast.LENGTH_SHORT).show();
-                        }else {
-                            Toast.makeText(MainActivity.this, "메뉴 3 클릭", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "다이어리 작성 클릭", Toast.LENGTH_SHORT).show();
+
+                        } else if (menuItem.getItemId() == R.id.scheduleModify){
+                            Toast.makeText(MainActivity.this, "스케줄 수정 클릭", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MainActivity.this, "스케줄 삭제 클릭", Toast.LENGTH_SHORT).show();
                         }
 
                         return false;
@@ -80,8 +89,34 @@ public class MainActivity extends AppCompatActivity {
                 });
                 popupMenu.show();
 
-
             }
         });
+
+        bottomMenu = (BottomNavigationView)findViewById(R.id.bottom_menu);
+        bottomMenu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+                switch(item.getItemId())
+                {
+                    case R.id.first_tab:
+
+                        break;
+
+                    case R.id.second_tab:
+                        break;
+
+                    case R.id.third_tab:
+                        break;
+
+                    case R.id.fourth_tab:
+                        break;
+                }
+
+                return true;
+            }
+        });
+
     }
 }
