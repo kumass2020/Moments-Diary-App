@@ -63,4 +63,15 @@ public class ListViewAdapter extends BaseAdapter {
 
         return convertView;
     }
+
+    // 아이템 데이터 추가를 위한 함수
+    public void addItem(String day, String title) {
+        Content item = new Content();
+
+        item.setDay(day);
+        item.setTitle(title);
+//        item.setDesc(desc);
+
+        listViewContentList.add(item);
+    }
 }

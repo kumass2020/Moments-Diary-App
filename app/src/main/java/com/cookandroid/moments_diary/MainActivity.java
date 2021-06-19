@@ -1,6 +1,7 @@
 package com.cookandroid.moments_diary;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.os.Bundle;
 import android.view.View;
@@ -22,25 +23,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        arrayList = new ArrayList<>();
+        ListView listview ;
+        ListViewAdapter adapter;
 
         // Adapter 생성
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayList);
+        adapter = new ListViewAdapter() ;
 
-        listView = (ListView)findViewById(R.id.lv);
+        // 리스트뷰 참조 및 Adapter달기
+        listview = (ListView) findViewById(R.id.lv);
+        listview.setAdapter(adapter);
 
-        // ListView에 Adapter 연결
-        listView.setAdapter(arrayAdapter);
-
-        for(int i=0; i<30; i++) {
-            arrayList.add("Item " +i);
-        }
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Toast.makeText(MainActivity.this, position+ "번째 Item", Toast.LENGTH_SHORT).show();
-            }
-        });
+        // 첫 번째 아이템 추가.
+        adapter.addItem("25", "Box");
+        // 두 번째 아이템 추가.
+        adapter.addItem("25", "Circle");
+        // 세 번째 아이템 추가.
+        adapter.addItem("25", "Ind");
     }
 }

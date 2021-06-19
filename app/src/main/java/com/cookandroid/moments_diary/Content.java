@@ -6,11 +6,11 @@ public class Content {
 //    private SimpleDateFormat
     private String title, reply, day;
 
-    public Content(String title, String reply, String targetDate) {
-        this.title = title;
-        this.reply = reply;
-        this.day = targetDate;
-    }
+//    public Content(String title, String reply, String targetDate) {
+//        this.title = title;
+//        this.reply = reply;
+//        this.day = targetDate;
+//    }
 
     public String getTitle() {
         return title;
