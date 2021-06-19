@@ -1,10 +1,12 @@
 package com.cookandroid.moments_diary;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,6 +16,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
@@ -44,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
         ListView listview ;
         ListViewAdapter adapter;
+
+        final LinearLayout llWrite = (LinearLayout)View.inflate(MainActivity.this, R.layout.write_dialog, null);
 
         // Adapter 생성
         adapter = new ListViewAdapter() ;
@@ -92,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // 하단 메뉴 선택 시 Action
         bottomMenu = (BottomNavigationView)findViewById(R.id.bottom_menu);
         bottomMenu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -101,7 +108,18 @@ public class MainActivity extends AppCompatActivity {
                 switch(item.getItemId())
                 {
                     case R.id.first_tab:
-
+                        new AlertDialog().Builder(MainActivity.this)
+                                .setView(llWrite)
+                                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        EditText etWrite = (EditText)llWrite.findViewById(R.id.etWrite);
+                                        String value = etWrite.getText().toString();
+                                        DBControl dbc = new DBControl(db);
+                                        dbc.insertContent(value);
+                                        refreshFragment(db);
+                                    }
+                                })
                         break;
 
                     case R.id.second_tab:
@@ -117,6 +135,11 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+    }
+
+    // 현재 fragment 새로고침. DB 내용이 화면에 반영되는 효과.
+    void refreshFragment(SQLiteDatabase db) {
 
     }
 }
