@@ -19,6 +19,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -134,12 +135,22 @@ public class MainActivity extends AppCompatActivity {
                                     .setView(llModify)
                                     .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int i) {
+
+                                            // EditText에 사용자가 작성한 문자열을 읽어옴
                                             EditText etModify = (EditText)llModify.findViewById(R.id.etModify);
                                             String value = etModify.getText().toString();
+
+                                            // DB에 Content 생성
                                             dbc.updateTitle(_id, value);
+
+                                            // DB에 있는 값을 화면에 재배치(새로고침 효과)
                                             c.requery();
                                             adapter.notifyDataSetChanged();
+
+                                            // EditText 초기화
                                             etModify.setText("");
+
+                                            // 다이얼로그 종료
                                             dialog.dismiss();
                                         }
                                     })
@@ -180,13 +191,27 @@ public class MainActivity extends AppCompatActivity {
                                 .setView(llWrite)
                                 .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int i) {
+
+                                        // Calendar 사용자 선택 값 읽어옴
+                                        CalendarView cvWrite = (CalendarView)findViewById(R.id.cvWrite);
+
+
+                                        // EditText에 사용자가 작성한 문자열을 읽어옴
                                         EditText etWrite = (EditText)llWrite.findViewById(R.id.etWrite);
                                         String value = etWrite.getText().toString();
+
+                                        // DB에 Content 생성
                                         dbc.insertContent(value);
 //                                        refreshFragment();
+
+                                        // DB에 있는 값을 화면에 재배치(새로고침 효과)
                                         c.requery();
                                         adapter.notifyDataSetChanged();
+
+                                        // EditText 초기화
                                         etWrite.setText("");
+
+                                        // 다이얼로그 종료
                                         dialog.dismiss();
                                     }
                                 })
