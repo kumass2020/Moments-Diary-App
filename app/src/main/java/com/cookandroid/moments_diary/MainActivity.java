@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
@@ -21,6 +22,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -29,8 +31,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<String> arrayList;
-    ArrayAdapter arrayAdapter;
+    ArrayList<Content> arrayList;
+//    ArrayAdapter arrayAdapter;
 //    ListView listView;
     BottomNavigationView bottomMenu;
     FragmentManager fragmentManager = getSupportFragmentManager();
@@ -49,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
         helper = new DBHelper(MainActivity.this, "newdb.db", null, 1);
         db = helper.getWritableDatabase();
         helper.onCreate(db);
+        DBControl dbc = new DBControl(db);
 
+        // 쓰기 버튼 inflate
         final LinearLayout llWrite = (LinearLayout)View.inflate(MainActivity.this, R.layout.write_dialog, null);
 
         // Adapter 생성
@@ -57,20 +61,43 @@ public class MainActivity extends AppCompatActivity {
 
         // 리스트뷰 참조 및 Adapter 설정
         listview = (ListView) findViewById(R.id.lv);
+//        listview.setAdapter(adapter);
+
+        // DB에 있는 값을 arrayList에 추가하고 arrayList에 있는 값을 화면의 listview에 출력
+        String sql = "select * from ContentTable;";
+        Cursor c = db.rawQuery(sql, null);
+        c.moveToFirst();
+//        arrayList.add(new Content);
+        String[] strs = new String[]{"DATE", "TITLE"};
+//        String[] strs2 = new String[]{"TITLE"};
+        int[] ints = new int[] {R.id.tvDay, R.id.tvTitle};
+        
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(listview.getContext(),
+                R.layout.content_layout,
+                c,
+                strs,
+                ints,
+                0);
+
         listview.setAdapter(adapter);
 
-        // 첫 번째 아이템 추가.
-        adapter.addItem("25", "Box");
-        // 두 번째 아이템 추가.
-        adapter.addItem("25", "Circle");
-        // 세 번째 아이템 추가.
-        adapter.addItem("25", "Ind");
+//        // 첫 번째 아이템 추가.
+//        adapter.addItem("25", "Box");
+//        // 두 번째 아이템 추가.
+//        adapter.addItem("25", "Circle");
+//        // 세 번째 아이템 추가.
+//        adapter.addItem("25", "Ind");
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView parent, View v, int position, long id) {
 
+//                Cursor cursor = ((SimpleCursorAdapter)l.getAdapter()).getCursor();
+//                cursor.moveToPosition(position);
+//                Content item = cursor.getClass(cursor.getColumnIndex)
+
+//                Cursor c = (Cursor)parent.getItemAtPosition(position);
                 // get item
                 Content item = (Content)parent.getItemAtPosition(position);
                 String strDay = item.getDay();
@@ -117,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
                                     public void onClick(DialogInterface dialog, int i) {
                                         EditText etWrite = (EditText)llWrite.findViewById(R.id.etWrite);
                                         String value = etWrite.getText().toString();
-                                        DBControl dbc = new DBControl(db);
                                         dbc.insertContent(value);
                                         refreshFragment();
                                         dialog.dismiss();
