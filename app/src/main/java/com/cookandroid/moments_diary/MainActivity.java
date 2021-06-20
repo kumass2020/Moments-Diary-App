@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 //        listview2.setAdapter(adapter);
 
         // DB에 있는 값을 arrayList에 추가하고 arrayList에 있는 값을 화면의 listview에 출력
-        String sql = "select * from ContentTable;";
+        String sql = "select * from ContentTable order by DATE;";
         Cursor c = db.rawQuery(sql, null);
         c.moveToFirst();
 //        arrayList.add(new Content);
@@ -75,9 +76,9 @@ public class MainActivity extends AppCompatActivity {
 //        String[] strs2 = new String[]{"TITLE"};
         int[] ints = new int[] {R.id.tvDay, R.id.tvTitle};
 
-        void refresh() {
-
-        }
+//        void refresh() {
+//
+//        }
 
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(listview.getContext(),
                 R.layout.content_layout,
@@ -87,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
                 0);
 
         listview.setAdapter(adapter);
+
+//        listview.
 
 //        // 첫 번째 아이템 추가.
 //        adapter.addItem("25", "Box");
@@ -218,4 +221,27 @@ public class MainActivity extends AppCompatActivity {
 //        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
 //        ft.detach(this).attach(this).commit();
     }
+
+
+//    private void checkBottomOfScroll(ListView listview){
+//        //화면에 리스트의 마지막 아이템이 보여지는지 체크
+//        listview.setOnScrollListener(new AbsListView.OnScrollListener() {
+//            @Override
+//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//                //현재 화면에 보이는 첫번째 리스트 아이템의 번호(firstVisibleItem) + 현재 화면에 보이는 리스트 아이템의 갯수(visibleItemCount)가 리스트 전체의 갯수(totalItemCount) -1 보다 크거나 같을때
+//                boolean lastitemVisibleFlag = (totalItemCount > 0) && (firstVisibleItem + visibleItemCount >= totalItemCount);
+//            }
+//            @Override
+//            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//                //OnScrollListener.SCROLL_STATE_IDLE은 스크롤이 이동하다가 멈추었을때 발생되는 스크롤 상태입니다.
+//                //즉 스크롤이 바닦에 닿아 멈춘 상태에 처리를 하겠다는 뜻
+//                if(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastitemVisibleFlag) {
+//                    Toast.makeText(mGlobalContext, "화면의 마지막 입니다.", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//    }
+//
+
+
 }
