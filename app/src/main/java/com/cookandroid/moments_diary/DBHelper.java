@@ -34,6 +34,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "_id integer primary key autoincrement,"
                 + "DIARY_CONTENT text,"
                 + "DATE text,"
+                + "MOOD integer,"
                 + "PARENT_TARGET_DATE text,"
                 + "PARENT_ID integer references ContentTable(_id) on delete cascade);";
 

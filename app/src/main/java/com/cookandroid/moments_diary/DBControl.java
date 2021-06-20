@@ -54,20 +54,33 @@ public class DBControl {
         db.update("ContentTable", values, "_id=?", new String[]{Integer.toString(_id)});
     }
 
-    public void insertDiary(String diaryContent, int parentId) {
+    public void insertDiary(String diaryContent, int mood, int parentId) {
         long now = System.currentTimeMillis();
         Date date = new Date(now);
         String strDate = sdf.format(date);
 
         String query = "SELECT TARGET_DATE FROM ContentTable WHERE _id = " + Integer.toString(parentId);
         Cursor cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
         String parentTargetDate = cursor.getString(0);
 
         ContentValues values = new ContentValues();
         values.put("DIARY_CONTENT", diaryContent);
-        values.put("DATE", parentTargetDate);
-        values.put("PARENT_TARGET_DATE", diaryContent);
+        values.put("DATE", strDate);
+        values.put("MOOD", mood);
+        values.put("PARENT_TARGET_DATE", parentTargetDate);
         values.put("PARENT_ID", parentId);
+        db.insert("DiaryTable",null, values);
+    }
+
+    public void deleteDB() {
+        // DB 초기화 필요 시
+//        db.execSQL("drop table ContentTable");
+//        db.execSQL("drop table DiaryTable");
+//        db.execSQL("delete from ContentTable");
+//        db.execSQL("delete from DiaryTable");
+        db.execSQL("drop table ContentTable");
+        db.execSQL("drop table DiaryTable");
     }
 
 //    public void selectAllTitle() {

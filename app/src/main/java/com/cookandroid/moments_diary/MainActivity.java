@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.TabActivity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.bottom_menu)
     BottomNavigationView bottomMenu;
 
-    FragmentManager fragmentManager = getSupportFragmentManager();
+//    FragmentManager fragmentManager = getSupportFragmentManager();
     private Fragment fa, fb, fc, fd;
 
     ListView listview, listview2;
@@ -75,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 //        bottomMenu.setOnNavigationItemSelectedListener(mOnNavigationItenSelectedListener);
 
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.fragment_container, FragmentSchedule.newInstance()).commit();
+//        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//        fragmentTransaction.add(R.id.fragment_container, FragmentSchedule.newInstance()).commit();
 
 
         // DB 생성
@@ -87,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         helper.onCreate(db);
         DBControl dbc = new DBControl(db);
 
+        final LinearLayout llDiary = (LinearLayout)View.inflate(MainActivity.this, R.layout.write_diary, null);
         // 쓰기 버튼 inflate
         final LinearLayout llWrite = (LinearLayout)View.inflate(MainActivity.this, R.layout.write_dialog, null);
         // 스케줄 수정 버튼 inflate
@@ -160,6 +163,37 @@ public class MainActivity extends AppCompatActivity {
                         // 다이어리 작성 클릭 시
                         if (menuItem.getItemId() == R.id.addDiary){
                             Toast.makeText(MainActivity.this, "다이어리 작성 클릭", Toast.LENGTH_SHORT).show();
+                            if (llDiary.getParent() != null)
+                                ((ViewGroup)llDiary.getParent()).removeView(llDiary);
+                            new AlertDialog.Builder(MainActivity.this)
+                                    .setView(llDiary)
+                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int i) {
+
+                                            // EditText에 사용자가 작성한 문자열을 읽어옴
+                                            EditText etDiary = (EditText)llDiary.findViewById(R.id.etDiary);
+                                            String value = etDiary.getText().toString();
+
+                                            // DB에 Content 생성
+                                            dbc.insertDiary(value, 1, _id);
+
+                                            // DB에 있는 값을 화면에 재배치(새로고침 효과)
+                                            c.requery();
+                                            adapter.notifyDataSetChanged();
+
+                                            // EditText 초기화
+                                            etDiary.setText("");
+
+                                            // 다이얼로그 종료
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int i) {
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .show();
                         }
                         // 스케줄 수정 클릭 시
                         else if (menuItem.getItemId() == R.id.scheduleModify){
@@ -229,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
         bottomMenu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
+//                FragmentTransaction transaction = fragmentManager.beginTransaction();
 
                 switch(item.getItemId())
                 {
@@ -320,11 +354,14 @@ public class MainActivity extends AppCompatActivity {
 
                     // 세번째 탭: 다이어리 모아보기
                     case R.id.third_tab:
-                        replaceFragment(FragmentDiary.newInstance());
+                        Intent intent = new Intent(getApplicationContext(),FragmentDiary.class);
+                        startActivityForResult(intent, 101);
                         return true;
 
                     // 네번째 탭: 설정
                     case R.id.fourth_tab:
+                        Intent intent2 = new Intent(getApplicationContext(),FragmentSetting.class);
+                        startActivityForResult(intent2, 101);
                         break;
                 }
 
@@ -335,9 +372,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void replaceFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, fragment).commit();
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.replace(R.id.fragment_container, fragment).commit();
     }
 
 
