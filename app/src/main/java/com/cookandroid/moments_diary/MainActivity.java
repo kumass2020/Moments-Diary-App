@@ -221,8 +221,8 @@ public class MainActivity extends AppCompatActivity {
                                             targetDate = sdf.format(date);
                                         }
 
-                                        // CalenderView 초기화
-                                        cvWrite.setDate(date);
+                                        // CalendarView 초기화
+                                        cvWrite.setDate(System.currentTimeMillis(),false,true);
 
 
                                         // EditText에 사용자가 작성한 문자열을 읽어옴
@@ -241,6 +241,7 @@ public class MainActivity extends AppCompatActivity {
                                         etWrite.setText("");
 
                                         // 다이얼로그 종료
+//                                        removeDialog();
                                         dialog.dismiss();
                                     }
                                 })
