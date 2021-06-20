@@ -14,6 +14,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String sql = "CREATE TABLE if not exists ContentTable ("
                 + "_id integer primary key autoincrement,"
+                + "TARGET_DATE text,"
                 + "DATE text,"
                 + "TITLE text);";
 
