@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
 
         // 쓰기 버튼 inflate
         final LinearLayout llWrite = (LinearLayout)View.inflate(MainActivity.this, R.layout.write_dialog, null);
+        // 스케줄 수정 버튼 inflate
+        final LinearLayout llModify = (LinearLayout)View.inflate(MainActivity.this, R.layout.modify_dialog, null);
 
         // Adapter 생성
         adapter = new ListViewAdapter();
@@ -72,6 +74,10 @@ public class MainActivity extends AppCompatActivity {
         String[] strs = new String[]{"DATE", "TITLE"};
 //        String[] strs2 = new String[]{"TITLE"};
         int[] ints = new int[] {R.id.tvDay, R.id.tvTitle};
+
+        void refresh() {
+
+        }
 
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(listview.getContext(),
                 R.layout.content_layout,
@@ -100,9 +106,11 @@ public class MainActivity extends AppCompatActivity {
 
 //                Cursor c = (Cursor)parent.getItemAtPosition(position);
 
+                int _id = (int)adapter.getItemId(position);
+
 //                // get item
-                Content item = (Content)parent.getItemAtPosition(position);
-                int _id = item.get_id();
+//                Content item = (Content)parent.getItemAtPosition(position);
+//                int _id = item.get_id();
 //                String strDay = item.getDay();
 //                String strTitle = item.getTitle();
 
@@ -117,18 +125,18 @@ public class MainActivity extends AppCompatActivity {
 
                         } else if (menuItem.getItemId() == R.id.scheduleModify){
                             Toast.makeText(MainActivity.this, "스케줄 수정 클릭", Toast.LENGTH_SHORT).show();
-                            if (llWrite.getParent() != null)
-                                ((ViewGroup)llWrite.getParent()).removeView(llWrite);
+                            if (llModify.getParent() != null)
+                                ((ViewGroup)llModify.getParent()).removeView(llModify);
                             new AlertDialog.Builder(MainActivity.this)
-                                    .setView(llWrite)
+                                    .setView(llModify)
                                     .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int i) {
-                                            EditText etWrite = (EditText)llWrite.findViewById(R.id.etWrite);
-                                            String value = etWrite.getText().toString();
+                                            EditText etModify = (EditText)llModify.findViewById(R.id.etModify);
+                                            String value = etModify.getText().toString();
                                             dbc.updateTitle(_id, value);
-//                                        refreshFragment();
                                             c.requery();
                                             adapter.notifyDataSetChanged();
+                                            etModify.setText("");
                                             dialog.dismiss();
                                         }
                                     })
@@ -140,6 +148,9 @@ public class MainActivity extends AppCompatActivity {
                                     .show();
                         } else {
                             Toast.makeText(MainActivity.this, "스케줄 삭제 클릭", Toast.LENGTH_SHORT).show();
+                            dbc.deleteTitle(_id);
+                            c.requery();
+                            adapter.notifyDataSetChanged();
                         }
 
                         return false;
@@ -172,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
 //                                        refreshFragment();
                                         c.requery();
                                         adapter.notifyDataSetChanged();
+                                        etWrite.setText("");
                                         dialog.dismiss();
                                     }
                                 })
