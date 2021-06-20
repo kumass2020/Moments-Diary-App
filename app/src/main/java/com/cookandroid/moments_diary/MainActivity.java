@@ -29,7 +29,11 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.text.SimpleDateFormat;
+import java.time.Month;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
 
     ListView listview, listview2;
     ListViewAdapter adapter;
+
+    CalendarView cvWrite;
+    int selYear, selMonth, selDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,11 +76,11 @@ public class MainActivity extends AppCompatActivity {
 //        listview2.setAdapter(adapter);
 
         // DB에 있는 값을 arrayList에 추가하고 arrayList에 있는 값을 화면의 listview에 출력
-        String sql = "select * from ContentTable order by DATE;";
+        String sql = "select * from ContentTable order by TARGET_DATE;";
         Cursor c = db.rawQuery(sql, null);
         c.moveToFirst();
 //        arrayList.add(new Content);
-        String[] strs = new String[]{"DATE", "TITLE"};
+        String[] strs = new String[]{"TARGET_DATE", "TITLE"};
 //        String[] strs2 = new String[]{"TITLE"};
         int[] ints = new int[] {R.id.tvDay, R.id.tvTitle};
 
@@ -193,7 +200,29 @@ public class MainActivity extends AppCompatActivity {
                                     public void onClick(DialogInterface dialog, int i) {
 
                                         // Calendar 사용자 선택 값 읽어옴
-                                        CalendarView cvWrite = (CalendarView)findViewById(R.id.cvWrite);
+                                        cvWrite = (CalendarView)llWrite.findViewById(R.id.cvWrite);
+                                        cvWrite.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+                                            @Override
+                                            public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
+                                                selYear = year;
+                                                selMonth = month+1;
+                                                selDay = dayOfMonth;
+                                            }
+                                        });
+                                        String targetDate = String.valueOf(selYear) + "-" + String.valueOf(selMonth) + "-" + String.valueOf(selDay);
+
+                                        // 현재 날짜 구하기
+                                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                        long now = System.currentTimeMillis();
+                                        Date date = new Date(now);
+
+                                        // 날짜가 변동 없을 경우
+                                        if(targetDate.equals("0-0-0")) {
+                                            targetDate = sdf.format(date);
+                                        }
+
+                                        // CalenderView 초기화
+                                        cvWrite.setDate(date);
 
 
                                         // EditText에 사용자가 작성한 문자열을 읽어옴
@@ -201,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
                                         String value = etWrite.getText().toString();
 
                                         // DB에 Content 생성
-                                        dbc.insertContent(value);
+                                        dbc.insertContent(targetDate, value);
 //                                        refreshFragment();
 
                                         // DB에 있는 값을 화면에 재배치(새로고침 효과)

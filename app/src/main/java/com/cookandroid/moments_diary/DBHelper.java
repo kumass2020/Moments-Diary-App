@@ -12,6 +12,13 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        // DB 초기화 필요 시
+//        db.execSQL("drop table ContentTable");
+//        db.execSQL("delete from DiaryTable");
+
+        // 외래키 허용
+        db.setForeignKeyConstraintsEnabled(true);
+
         String sql = "CREATE TABLE if not exists ContentTable ("
                 + "_id integer primary key autoincrement,"
                 + "TARGET_DATE text,"
@@ -19,6 +26,15 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "TITLE text);";
 
         db.execSQL(sql);
+
+        String sql2 = "CREATE TABLE if not exists DiaryTable ("
+                + "_id integer primary key autoincrement,"
+                + "DIARY_CONTENT text,"
+                + "DATE text,"
+                + "PARENT_TARGET_DATE text references ContentTable(TARGET_DATE),"
+                + "PARENT_ID integer references ContentTable(_id));";
+
+        db.execSQL(sql2);
     }
 
     @Override

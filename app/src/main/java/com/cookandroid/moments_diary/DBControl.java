@@ -23,15 +23,15 @@ public class DBControl {
     }
 
     // DB에 Content 생성
-    public void insertContent(String title) {
+    public void insertContent(String targetDate, String title) {
         long now = System.currentTimeMillis();
-        Date targetDate = new Date();
+//        Date targetDate = new Date();
         Date date = new Date(now);
-        String strTargetDate = sdf.format(date);
+//        String strTargetDate = sdf.format(date);
         String strDate = sdf.format(date);
 
         ContentValues values = new ContentValues();
-        values.put("TARGET_DATE", strTargetDate);
+        values.put("TARGET_DATE", targetDate);
         values.put("DATE", strDate);
         values.put("TITLE", title);
         db.insert("ContentTable",null, values);
