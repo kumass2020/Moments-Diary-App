@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 
 public class Content{
 //    private SimpleDateFormat
+    private int _id;
     private String title, reply, day;
 
 //    public Content(String title, String reply, String targetDate) {
@@ -16,6 +17,14 @@ public class Content{
 //        this.reply = reply;
 //        this.day = targetDate;
 //    }
+    public int get_id() {
+        return this._id;
+    }
+
+    public void set_id(int id) {
+        _id = id;
+    }
+
 
     public String getDay() {
         return this.day;
@@ -32,7 +41,7 @@ public class Content{
     }
 
     public void setTitle(String _title) {
-        this.title = _title;
+        title = _title;
     }
 
     public String getReply() {

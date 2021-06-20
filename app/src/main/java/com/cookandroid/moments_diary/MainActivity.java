@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomMenu;
     FragmentManager fragmentManager = getSupportFragmentManager();
 
-    ListView listview ;
+    ListView listview, listview2;
     ListViewAdapter adapter;
 
     @Override
@@ -61,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
 
         // 리스트뷰 참조 및 Adapter 설정
         listview = (ListView) findViewById(R.id.lv);
-//        listview.setAdapter(adapter);
+//        listview2 = (ListView) findViewById(R.id.lv);
+//        listview2.setAdapter(adapter);
 
         // DB에 있는 값을 arrayList에 추가하고 arrayList에 있는 값을 화면의 listview에 출력
         String sql = "select * from ContentTable;";
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         String[] strs = new String[]{"DATE", "TITLE"};
 //        String[] strs2 = new String[]{"TITLE"};
         int[] ints = new int[] {R.id.tvDay, R.id.tvTitle};
-        
+
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(listview.getContext(),
                 R.layout.content_layout,
                 c,
@@ -98,10 +99,12 @@ public class MainActivity extends AppCompatActivity {
 //                Content item = cursor.getClass(cursor.getColumnIndex)
 
 //                Cursor c = (Cursor)parent.getItemAtPosition(position);
-                // get item
+
+//                // get item
                 Content item = (Content)parent.getItemAtPosition(position);
-                String strDay = item.getDay();
-                String strTitle = item.getTitle();
+                int _id = item.get_id();
+//                String strDay = item.getDay();
+//                String strTitle = item.getTitle();
 
                 // Content 클릭 시 팝업 메뉴
                 final PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
@@ -114,6 +117,27 @@ public class MainActivity extends AppCompatActivity {
 
                         } else if (menuItem.getItemId() == R.id.scheduleModify){
                             Toast.makeText(MainActivity.this, "스케줄 수정 클릭", Toast.LENGTH_SHORT).show();
+                            if (llWrite.getParent() != null)
+                                ((ViewGroup)llWrite.getParent()).removeView(llWrite);
+                            new AlertDialog.Builder(MainActivity.this)
+                                    .setView(llWrite)
+                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int i) {
+                                            EditText etWrite = (EditText)llWrite.findViewById(R.id.etWrite);
+                                            String value = etWrite.getText().toString();
+                                            dbc.updateTitle(_id, value);
+//                                        refreshFragment();
+                                            c.requery();
+                                            adapter.notifyDataSetChanged();
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int i) {
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .show();
                         } else {
                             Toast.makeText(MainActivity.this, "스케줄 삭제 클릭", Toast.LENGTH_SHORT).show();
                         }
@@ -145,7 +169,9 @@ public class MainActivity extends AppCompatActivity {
                                         EditText etWrite = (EditText)llWrite.findViewById(R.id.etWrite);
                                         String value = etWrite.getText().toString();
                                         dbc.insertContent(value);
-                                        refreshFragment();
+//                                        refreshFragment();
+                                        c.requery();
+                                        adapter.notifyDataSetChanged();
                                         dialog.dismiss();
                                     }
                                 })
@@ -175,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
     // 현재 fragment 새로고침. DB 내용이 화면에 반영되는 효과.
     void refreshFragment() {
+//        c.requery();
         adapter.notifyDataSetChanged();
 //        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
 //        ft.detach(this).attach(this).commit();
