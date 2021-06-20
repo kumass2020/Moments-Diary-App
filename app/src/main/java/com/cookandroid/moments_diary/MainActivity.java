@@ -47,7 +47,10 @@ public class MainActivity extends AppCompatActivity {
     ListViewAdapter adapter;
 
     CalendarView cvWrite;
+    boolean eventFlag = false;
     int selYear, selMonth, selDay;
+    String targetDate;
+    String strMonth, strDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         Cursor c = db.rawQuery(sql, null);
         c.moveToFirst();
 //        arrayList.add(new Content);
-        String[] strs = new String[]{"TARGET_DATE", "TITLE"};
+        String[] strs = new String[]{"DISP_TARGET_DATE", "TITLE"};
 //        String[] strs2 = new String[]{"TITLE"};
         int[] ints = new int[] {R.id.tvDay, R.id.tvTitle};
 
@@ -131,10 +134,13 @@ public class MainActivity extends AppCompatActivity {
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
+
+                        // 다이어리 작성 클릭 시
                         if (menuItem.getItemId() == R.id.addDiary){
                             Toast.makeText(MainActivity.this, "다이어리 작성 클릭", Toast.LENGTH_SHORT).show();
-
-                        } else if (menuItem.getItemId() == R.id.scheduleModify){
+                        }
+                        // 스케줄 수정 클릭 시
+                        else if (menuItem.getItemId() == R.id.scheduleModify){
                             Toast.makeText(MainActivity.this, "스케줄 수정 클릭", Toast.LENGTH_SHORT).show();
                             if (llModify.getParent() != null)
                                 ((ViewGroup)llModify.getParent()).removeView(llModify);
@@ -167,7 +173,9 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     })
                                     .show();
-                        } else {
+                        }
+                        // 스케줄 삭제 클릭 시
+                        else {
                             Toast.makeText(MainActivity.this, "스케줄 삭제 클릭", Toast.LENGTH_SHORT).show();
                             dbc.deleteTitle(_id);
                             c.requery();
@@ -179,6 +187,18 @@ public class MainActivity extends AppCompatActivity {
                 });
                 popupMenu.show();
 
+            }
+        });
+
+        // Calendar 사용자 선택 값 읽어옴
+        cvWrite = (CalendarView)llWrite.findViewById(R.id.cvWrite);
+        cvWrite.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
+                selYear = year;
+                selMonth = month+1;
+                selDay = dayOfMonth;
+                eventFlag = true;
             }
         });
 
@@ -198,18 +218,32 @@ public class MainActivity extends AppCompatActivity {
                                 .setView(llWrite)
                                 .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int i) {
+                                        if(selMonth < 10) {
+                                            strMonth = "0" + String.valueOf(selMonth);
+                                        } else {
+                                            strMonth = String.valueOf(selMonth);
+                                        }
+                                        if(selDay < 10) {
+                                            strDay = "0" + String.valueOf(selDay);
+                                        } else {
+                                            strDay = String.valueOf(selDay);
+                                        }
 
-                                        // Calendar 사용자 선택 값 읽어옴
-                                        cvWrite = (CalendarView)llWrite.findViewById(R.id.cvWrite);
-                                        cvWrite.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-                                            @Override
-                                            public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
-                                                selYear = year;
-                                                selMonth = month+1;
-                                                selDay = dayOfMonth;
-                                            }
-                                        });
-                                        String targetDate = String.valueOf(selYear) + "-" + String.valueOf(selMonth) + "-" + String.valueOf(selDay);
+                                        targetDate = String.valueOf(selYear) + "-" + strMonth + "-" + strDay;
+
+//                                        // Calendar 사용자 선택 값 읽어옴
+//                                        if(selMonth < 10 || selDay < 10) {
+//                                            targetDate = String.valueOf(selYear) + "-0" + String.valueOf(selMonth) + "-0" + String.valueOf(selDay);
+//                                        } else {
+//                                            targetDate = String.valueOf(selYear) + "-" + String.valueOf(selMonth) + "-" + String.valueOf(selDay);
+//                                        }
+//
+//                                        if (selDay < 10) {
+//                                            targetDate = String.valueOf(selYear) + "-" + String.valueOf(selMonth) + "-0" + String.valueOf(selDay);
+//                                        } else {
+//                                            targetDate = String.valueOf(selYear) + "-" + String.valueOf(selMonth) + "-" + String.valueOf(selDay);
+//
+//                                        }
 
                                         // 현재 날짜 구하기
                                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -217,13 +251,10 @@ public class MainActivity extends AppCompatActivity {
                                         Date date = new Date(now);
 
                                         // 날짜가 변동 없을 경우
-                                        if(targetDate.equals("0-0-0")) {
+                                        if(targetDate.equals("0-0-0") || targetDate.equals("0-00-0") || targetDate.equals("0-00-00")) {
+                                            // 오늘 날짜로 한다.
                                             targetDate = sdf.format(date);
                                         }
-
-                                        // CalendarView 초기화
-                                        cvWrite.setDate(System.currentTimeMillis(),false,true);
-
 
                                         // EditText에 사용자가 작성한 문자열을 읽어옴
                                         EditText etWrite = (EditText)llWrite.findViewById(R.id.etWrite);
@@ -236,6 +267,12 @@ public class MainActivity extends AppCompatActivity {
                                         // DB에 있는 값을 화면에 재배치(새로고침 효과)
                                         c.requery();
                                         adapter.notifyDataSetChanged();
+
+                                        // CalendarView 초기화
+                                        cvWrite.setDate(System.currentTimeMillis(),false,true);
+                                        selYear = 0;
+                                        selMonth = 0;
+                                        selDay = 0;
 
                                         // EditText 초기화
                                         etWrite.setText("");

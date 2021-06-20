@@ -17,6 +17,12 @@
             android:textSize="20dp"
             android:text="날짜를 선택하고 내용을 입력하세요." />
 
+        <EditText
+            android:id="@+id/etWrite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="내용"/>
+
         <CalendarView
             android:id="@+id/cvWrite"
             android:layout_width="wrap_content"
@@ -25,11 +31,7 @@
             android:layout_gravity="center"
             android:minDate="01/01/2021"/>
 
-        <EditText
-            android:id="@+id/etWrite"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="내용"/>
+
 
     </LinearLayout>
 

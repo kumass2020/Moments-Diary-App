@@ -29,17 +29,21 @@ public class DBControl {
         Date date = new Date(now);
 //        String strTargetDate = sdf.format(date);
         String strDate = sdf.format(date);
+        String temp = targetDate.replace("-", "");
+        String dispTargetDate = temp.substring(0, 4) + "\n" + temp.substring(4);
 
         ContentValues values = new ContentValues();
         values.put("TARGET_DATE", targetDate);
         values.put("DATE", strDate);
         values.put("TITLE", title);
+        values.put("DISP_TARGET_DATE", dispTargetDate);
         db.insert("ContentTable",null, values);
     }
 
     // 테이블 안의 Content 삭제
     public void deleteTitle(int _id) {
         db.delete("ContentTable", "_id=?", new String[]{Integer.toString(_id)});
+//        db.execSQL("DELETE FROM ContentTable WHERE _id=" + Integer.toString(_id));
     }
 
     // 테이블 안의 Content 수정
@@ -47,6 +51,10 @@ public class DBControl {
         ContentValues values = new ContentValues();
         values.put("TITLE", title);
         db.update("ContentTable", values, "_id=?", new String[]{Integer.toString(_id)});
+    }
+
+    public void insertDiary(String diaryContent) {
+
     }
 
 //    public void selectAllTitle() {
