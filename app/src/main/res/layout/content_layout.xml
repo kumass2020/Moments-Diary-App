@@ -15,7 +15,8 @@
             android:id="@+id/tvDay"
             android:layout_width="60dp"
             android:layout_height="45dp"
-            android:layout_marginBottom="0dp"
+            android:layout_marginBottom="3dp"
+            android:layout_gravity="center_vertical"
             android:textSize="20dp"
             android:text="2021\n0601" />
 

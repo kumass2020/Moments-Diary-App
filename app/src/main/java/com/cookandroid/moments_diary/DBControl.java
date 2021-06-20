@@ -1,5 +1,6 @@
 package com.cookandroid.moments_diary;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.text.SimpleDateFormat;
@@ -53,8 +54,20 @@ public class DBControl {
         db.update("ContentTable", values, "_id=?", new String[]{Integer.toString(_id)});
     }
 
-    public void insertDiary(String diaryContent) {
+    public void insertDiary(String diaryContent, int parentId) {
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        String strDate = sdf.format(date);
 
+        String query = "SELECT TARGET_DATE FROM ContentTable WHERE _id = " + Integer.toString(parentId);
+        Cursor cursor = db.rawQuery(query, null);
+        String parentTargetDate = cursor.getString(0);
+
+        ContentValues values = new ContentValues();
+        values.put("DIARY_CONTENT", diaryContent);
+        values.put("DATE", parentTargetDate);
+        values.put("PARENT_TARGET_DATE", diaryContent);
+        values.put("PARENT_ID", parentId);
     }
 
 //    public void selectAllTitle() {

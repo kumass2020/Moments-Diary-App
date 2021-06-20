@@ -3,6 +3,7 @@ package com.cookandroid.moments_diary;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -25,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TabHost;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -35,13 +37,19 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<Content> arrayList;
 //    ArrayAdapter arrayAdapter;
 //    ListView listView;
+    @BindView(R.id.bottom_menu)
     BottomNavigationView bottomMenu;
+
     FragmentManager fragmentManager = getSupportFragmentManager();
+    private Fragment fa, fb, fc, fd;
 
     ListView listview, listview2;
     ListViewAdapter adapter;
@@ -52,10 +60,24 @@ public class MainActivity extends AppCompatActivity {
     String targetDate;
     String strMonth, strDay;
 
+//    static TabHost tabHost;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Tab 생성
+//        TabHost tabHost = getTabHost();
+
+        ButterKnife.bind(this);
+//        bottomMenu.setOnNavigationItemSelectedListener(mOnNavigationItenSelectedListener);
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.fragment_container, FragmentSchedule.newInstance()).commit();
+
 
         // DB 생성
         DBHelper helper;
@@ -211,6 +233,7 @@ public class MainActivity extends AppCompatActivity {
 
                 switch(item.getItemId())
                 {
+                    // 첫번째 탭: 스케줄 쓰기
                     case R.id.first_tab:
                         if (llWrite.getParent() != null)
                             ((ViewGroup)llWrite.getParent()).removeView(llWrite);
@@ -290,21 +313,33 @@ public class MainActivity extends AppCompatActivity {
                                 .show();
                         break;
 
+                    // 두번째 탭: 스케줄 탭(기본 화면)
                     case R.id.second_tab:
-                        break;
+                        replaceFragment(FragmentSchedule.newInstance());
+                        return true;
 
+                    // 세번째 탭: 다이어리 모아보기
                     case R.id.third_tab:
-                        break;
+                        replaceFragment(FragmentDiary.newInstance());
+                        return true;
 
+                    // 네번째 탭: 설정
                     case R.id.fourth_tab:
                         break;
                 }
 
-                return true;
+                return false;
             }
         });
 
     }
+
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment).commit();
+    }
+
 
     // 현재 fragment 새로고침. DB 내용이 화면에 반영되는 효과.
     void refreshFragment() {
